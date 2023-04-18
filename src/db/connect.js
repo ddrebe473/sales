@@ -19,7 +19,7 @@ const connectDB = (uri) => __awaiter(void 0, void 0, void 0, function* () {
     // useUnifiedTopology: true,
     };
     return mongoose_1.default.connect(uri, options)
-        .then(() => console.log('Database Connection'))
+        .then(() => console.log('Database Connected'))
         .catch((err) => console.log(err));
 });
 module.exports = connectDB;

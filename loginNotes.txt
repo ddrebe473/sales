@@ -1,0 +1,28 @@
+in login.js
+
+1. Pass the credentials to the api in a fetch
+/////////////////////////////////////////////////////////////////
+in backend login
+
+2. recieve the credentials from the API request
+
+3. search mongo for user
+
+4. if user is not found reject the login
+
+5. check the password
+
+6. if password matches, check token date
+
+7. if token date passed, make new token and set expiration date
+
+8. save the user with new token
+
+9. return the user with new token
+
+/////////////////////////////////////////////////////////////////
+in login.js
+
+10. save the returned user in the session storage
+
+11. set windows location back to index.html
