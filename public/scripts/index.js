@@ -3,22 +3,23 @@ let loggedIn = false;
 const getUser = () => {
     const user = sessionStorage.getItem('sessionUser');
 
-    return user;
+    return JSON.parse(user);
 };
 
 const toLogin = () => {
     window.location.href = '/login.html';
 };
 
-const onLoad = () => {
+const onLoad = async () => {
     const curUser = getUser();
-    if (
-        !curUser ||
-        !curUser.token ||
-        !curUser.expireDate ||
-        new Date(curUser.expireDate) < new Date()
-    ) {
+    console.log('curUser: ', curUser);
+    if (!curUser || !curUser.token) {
         toLogin();
+    }
+    let isValid = await validateToken(curUser.token);
+    if (!isValid) {
+        toLogin();
+        console.log('valid: ', isValid);
     }
 };
 onLoad();

@@ -12,17 +12,17 @@ in backend login
 
 5. check the password
 
-6. if password matches, check token date
+6. make new token and set expiration date
 
-7. if token date passed, make new token and set expiration date
+7. save the user with new token
 
-8. save the user with new token
-
-9. return the user with new token
+8. return the user with new token
 
 /////////////////////////////////////////////////////////////////
 in login.js
 
-10. save the returned user in the session storage
+9. save the returned user in the session storage
 
-11. set windows location back to index.html
+10. set windows location back to index.html
+
+/////////////////////////////////////////////////////////////////

@@ -13,12 +13,17 @@ const login = async () => {
             passKey: passInput,
         }),
     });
-    const content = await rawResponse.json();
+    const user = await rawResponse.json();
+    let userString = JSON.stringify(user)
+    if (rawResponse.status != 200) {
+        alert('error logging in')
+        return
+    }
 
-    sessionStorage.setItem('sessionUser', content);
+    sessionStorage.setItem('sessionUser', userString);
     window.location.href = '/index.html';
 
-    console.log(content);
+    console.log(userString);
 };
 
 const goToSignUp = () => {

@@ -8,42 +8,59 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const uuid_1 = require("uuid");
+const JWT = require('../jwt');
 const User = require('../models/users');
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userList = yield User.find({});
     return res.status(200).json(userList);
 });
-const createUsers = () => {
-    console.log('test');
-};
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //2. recieve the credentials from the API request
+    //recieve the credentials from the API request
     let username = req.body.userKey;
     let password = req.body.passKey;
-    console.log('username: ', username);
-    console.log('passwrod: ', password);
-    //3. search mongo for user
+    //search mongo for user
     const user = yield User.findOne({ name: username });
     console.log(user);
-    //4. if user is not found reject the login
+    // if user is not found reject the login
     if (!user) {
         return res.status(404).send({ msg: 'user not found' });
     }
-    //5. check the password
+    // check the password
     if (password != user.password) {
         return res.status(401).send({ msg: 'password not recognize' });
     }
-    let id = user.token = (0, uuid_1.v4)();
+    //= make new token and set expiration date
+    let id = (user.token = JWT.GenerateToken(username));
+    // save the user with new token
     yield user.save();
-    console.log('token:', id);
     //remove password from return object
-    user.password = null;
+    user.password = undefined;
+    delete user.password;
+    //return the user with new token
     return res.status(200).json(user);
+});
+const validateUserToken = (req, res) => {
+    const token = req.query.token;
+    console.log('backend Token:', token);
+    let isValid = JWT.ValidateToken(token);
+    console.log('isValid:', isValid);
+    return res.status(200).json({ isValid: isValid });
+};
+const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let username = req.body.username;
+    let password = req.body.password;
+    //find user
+    const user = yield User.findOne({ name: username });
+    if (user) {
+        return res.status(401).json({ err: "user already exists" });
+    }
+    //send data to mongo
+    const newUser = yield User.create({ name: username, password: password });
+    return res.status(200).json({ success: true });
 });
 module.exports = {
     getUsers,
-    createUsers,
     loginUser,
+    validateUserToken,
+    registerUser
 };
